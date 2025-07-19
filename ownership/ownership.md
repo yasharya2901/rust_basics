@@ -32,6 +32,23 @@ let y = x; // y now owns the value 5, x is still valid
 ```
 Here, the integer value of variable `x` will get copied to `y` and both `x` and `y` are usable, because i32 value has been "copied".
 
+🚩 REMEMBER: Only types with a known size at compile time can be copied. This includes all scalar types (integers, floats, booleans, characters) and tuples if they only contain types that implement the Copy trait.
+
+```Rust
+fn main() {
+    let x: (i32, i32, (), String) = (1, 2, (), "hello");
+    let y = x; // This will not compile because String does not implement Copy
+
+    // Instead, we should use string reference
+    let x: (i32, i32, (), &str) = (1, 2, (), "hello");
+    let y = x; // This will compile because &str implements Copy
+
+    // And the reason is that the size of &str is known at compile time, and it does not own the data, it just borrows it. While String owns the data and its size is not known at compile time.
+}
+```
+
+---
+
 ```Rust
 let s1 = String::from("Hello"); // s1 owns the String
 let s2 = s1; // s2 now owns the String, s1 is no longer valid
